@@ -1,4 +1,4 @@
-This is a Shiny web-app that allows you to batch download citations and PDFs for the articles in the American Economic Review.
+This is a source code for the Shiny web-app that allows you to batch download citations and PDFs for the articles in the American Economic Review.
 
 Just paste the URL of an issue you want into the Issue URL field, select the existing download folder on your computer, choose the desired citation format, and click Download!
 
