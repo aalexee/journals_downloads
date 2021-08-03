@@ -3,6 +3,7 @@
 
 library(shiny)
 library(shinyFiles)
+library(zipR)
 library(bslib)
 library(fs)
 library(tidyverse)
@@ -69,15 +70,16 @@ ui <- fluidPage(
             , actionButton(
                 "download_bibs"
                 , "Download citations"
-                , icon = icon("download")
-                , class = "btn-primary"
+                # , icon = icon("download")
+                # , class = "btn-primary"
             )
             , actionButton(
                 "download_pdfs"
                 , "Download PDFs"
-                , icon = icon("download")
-                , class = "btn-primary"
+                # , icon = icon("download")
+                # , class = "btn-primary"
             )
+            , downloadButton("download_bibs_zip", "Download citations")
             , hr()
             , p(
                 "Programmed by "
@@ -177,7 +179,27 @@ server <- function(input, output, session) {
             }
             , message = "Downloaded"
         )
+
+
     })
+
+    output$download_bibs_zip <- downloadHandler(
+        filename = function() {
+            "citations.zip"
+        },
+        content = function(zip_file_name) {
+            files <- list.files(
+                path = parseDirPath(volumes, input$directory)
+                , full.names = F
+            )
+            zip::zip(
+                zipfile = zip_file_name
+                , files = files
+                , root = parseDirPath(volumes, input$directory)
+            )
+        }
+        , contentType = "application/zip"
+    )
 
 
     # download pdfs -----------------------------------------------------------
