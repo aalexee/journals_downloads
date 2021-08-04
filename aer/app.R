@@ -2,9 +2,6 @@
 # packages ----------------------------------------------------------------
 
 library(shiny)
-# library(shinyFiles)
-# library(zipR)
-# library(bslib)
 library(fs)
 library(tidyverse)
 library(rvest)
@@ -78,18 +75,18 @@ ui <- fluidPage(
                 , "Download citations"
                 , class = "btn-primary"
             )
-            , hr()
-            , actionButton(
-                "download_pdfs"
-                , "Prepare PDFs"
-                # , icon = icon("download")
-                # , class = "btn-primary"
-            )
-            , downloadButton(
-                "download_pdfs_zip"
-                , "Download PDFs"
-                , class = "btn-primary"
-            )
+            # , hr()
+            # , actionButton(
+            #     "download_pdfs"
+            #     , "Prepare PDFs"
+            #     # , icon = icon("download")
+            #     # , class = "btn-primary"
+            # )
+            # , downloadButton(
+            #     "download_pdfs_zip"
+            #     , "Download PDFs"
+            #     , class = "btn-primary"
+            # )
             , hr()
             , p(
                 "Programmed by "
@@ -135,8 +132,8 @@ server <- function(input, output, session) {
     #     , "shiny"
     #     )
 
-    input_directory <- "/home/shiny/"
-
+    # input_directory <- "/home/shiny/"
+    input_directory <- tempdir()
 
     # download citations ------------------------------------------------------
 
@@ -207,82 +204,7 @@ server <- function(input, output, session) {
         content = function(zip_file_name) {
             files <- list.files(
                 path = input_directory
-                , full.names = F
-            )
-            zip::zip(
-                zipfile = zip_file_name
-                , files = files
-                , root = input_directory
-            )
-        }
-        , contentType = "application/zip"
-    )
-
-
-    # download pdfs -----------------------------------------------------------
-
-
-    observeEvent(input$download_pdfs, {
-
-        pg <- read_html(input$url)
-
-        hrefs <- pg %>%
-            html_nodes(., "a") %>%
-            html_attr("href")
-
-        articles <- hrefs %>%
-            str_subset(., "articles\\?") %>%
-            str_subset(., "\\.i", negate = T) %>%
-            str_extract(., "aer.*")
-
-        issue_id <-  hrefs %>%
-            str_subset(., "articles\\?") %>%
-            str_sub(., str_locate(., "id")[, 1] + 3, str_locate(., "aer")[, 1] - 2)
-        issue_id <- issue_id[1]
-
-        withProgress(
-            expr = {
-
-                for (j in 1:2) {
-
-                    i <- articles[j]
-
-                    name_download <- str_c(str_remove_all(i, "\\."), ".pdf")
-                    path <- str_c(
-                        input_directory
-                        , .Platform$file.sep
-                        , name_download
-                    )
-                    url_pdf <- str_c(
-                        "https://pubs.aeaweb.org/doi/pdfplus/"
-                        , issue_id
-                        , "/"
-                        , i
-                    )
-
-                    download.file(
-                        url = url_pdf
-                        , destfile = path
-                    )
-
-                    incProgress(
-                        1/length(articles)
-                        , detail = str_c(j, " of ", length(articles))
-                    )
-
-                }
-            }
-            , message = "Downloaded"
-        )
-    })
-
-    output$download_pdfs_zip <- downloadHandler(
-        filename = function() {
-            "pdfs.zip"
-        },
-        content = function(zip_file_name) {
-            files <- list.files(
-                path = input_directory
+                , pattern = input$cit_format
                 , full.names = F
             )
             zip::zip(
