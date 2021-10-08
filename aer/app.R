@@ -140,6 +140,8 @@ server <- function(input, output, session) {
 
     observeEvent(input$download_bibs, {
 
+        unlink(str_c(input_directory, .Platform$file.sep, "*.", input$cit_format))
+
         pg <- read_html(input$url)
 
         hrefs <- pg %>%
