@@ -20,41 +20,31 @@ ui <- fluidPage(
     theme = bslib::bs_theme(bootswatch = "sandstone")
     , fluidRow(
         column(
-            width = 6, offset = 3
-            , h1("AER Batch Downloader")
-            # , p(
-            #     "The app downloads citations and PDFs for"
-            #     , strong("all")
-            #     , "the articles in a selected issue of the"
-            #     , a(
-            #         "American Economic Review"
-            #         , href = "https://www.aeaweb.org/journals/aer"
-            #     )
-            #     , " (except the 'Front Matter')."
-            # )
-            # , p(
-            #     "Just paste the URL of an issue you want into the"
-            #     , code("Issue URL")
-            #     , "field,"
-            #     , "select the existing download folder on your computer,"
-            #     , "choose the desired citation format, and click"
-            #     , code("Download")
-            #     , "!"
-            # )
-            # , p(
-            #     "To download PDFs, you"
-            #     , strong("have")
-            #     , "to have access to them"
-            #     , "via your organization and be on your"
-            #     , "organization's network."
-            #     , "Access using your personal subscription and credentials will, probably, not work."
-            # )
-            # , hr()
+            width = 4, offset = 4
+            , h1("AER Citations Downloader")
+            , p(
+                "The app downloads citations for"
+                , strong("all")
+                , "the articles in a selected issue of the"
+                , a(
+                    "American Economic Review"
+                    , href = "https://www.aeaweb.org/journals/aer"
+                )
+                , " (except the 'Front Matter')."
+            )
+            , p(
+                "Paste the URL of an issue you want into the"
+                , code("Issue URL")
+                , "field,"
+                , "choose the desired citation format, click the"
+                , code("Prepare citations")
+                , "button, wait until the download process is finished, and finally click the"
+                , code("Download")
+                , "button to download a zip file with citations on your computer."
+            )
+            , hr()
             , h5("Issue URL")
             , textInput("url", label = NULL, value = "https://www.aeaweb.org/issues/617")
-            # , h5("Download folder")
-            # , shinyDirButton("directory", "Select", NULL)
-            # , verbatimTextOutput("directorypath", placeholder = T)
             , h5("Citation format")
             , selectInput("cit_format", label = NULL
                           , choices = list(
@@ -75,18 +65,6 @@ ui <- fluidPage(
                 , "Download citations"
                 , class = "btn-primary"
             )
-            # , hr()
-            # , actionButton(
-            #     "download_pdfs"
-            #     , "Prepare PDFs"
-            #     # , icon = icon("download")
-            #     # , class = "btn-primary"
-            # )
-            # , downloadButton(
-            #     "download_pdfs_zip"
-            #     , "Download PDFs"
-            #     , class = "btn-primary"
-            # )
             , hr()
             , p(
                 "Programmed by "
@@ -103,40 +81,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
-    # volumes <- c(
-    #     Home = fs::path_home()
-    #     # , "R Installation" = R.home()
-    #     , getVolumes()()
-    # )
-    #
-    # shinyDirChoose(
-    #     input
-    #     , "directory"
-    #     , roots = volumes
-    #     , session = session
-    #     , restrictions = system.file(package = "base")
-    #     , allowDirCreate = FALSE
-    # )
-    #
-    # output$directorypath <- renderText({
-    #     if (is.integer(input$directory)) {
-    #         cat("No directory has been selected (shinyDirChoose)")
-    #     } else {
-    #         parseDirPath(volumes, input$directory)
-    #     }
-    # })
-
-    # input_directory <- str_c(
-    #     fs::path_home()
-    #     , .Platform$file.sep
-    #     , "shiny"
-    #     )
-
-    # input_directory <- "/home/shiny/"
     input_directory <- tempdir()
-
-    # download citations ------------------------------------------------------
-
 
     observeEvent(input$download_bibs, {
 
