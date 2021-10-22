@@ -36,10 +36,12 @@ ui <- fluidPage(
                 "Paste the URL of an issue you want into the"
                 , code("Issue URL")
                 , "field,"
-                , "choose the desired citation format, click the"
+                , "choose the desired"
+                , code("Citation format")
+                , ", click the"
                 , code("Prepare citations")
                 , "button, wait until the download process is finished, and finally click the"
-                , code("Download")
+                , code("Download citations")
                 , "button to download a zip file with citations on your computer."
             )
             , hr()
